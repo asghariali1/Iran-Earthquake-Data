@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historical Earthquakes Data Explorer</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <h1 class="nav-title">🌍 Historical Earthquakes Data Explorer</h1>
+                <ul class="nav-menu">
+                    <li><a href="#overview" class="nav-link">Overview</a></li>
+                    <li><a href="#map" class="nav-link">Interactive Map</a></li>
+                    <li><a href="#analytics" class="nav-link">Analytics</a></li>
+                    <li><a href="#data" class="nav-link">Recent Data</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- GitHub Auto-Update Status -->
+        <section id="github-status" class="section">
+            <div class="container">
+                <div class="github-info">
+                    <div class="auto-update-card">
+                        <h3>🚀 Live GitHub Deployment</h3>
+                        <div class="github-stats">
+                            <div class="github-stat">
+                                <span class="stat-icon">🔄</span>
+                                <span class="stat-text">Auto-updates every 6 hours</span>
+                            </div>
+                            <div class="github-stat">
+                                <span class="stat-icon">📡</span>
+                                <span class="stat-text">Live USGS data integration</span>
+                            </div>
+                            <div class="github-stat">
+                                <span class="stat-icon">🌍</span>
+                                <span class="stat-text">Iran region focused</span>
+                            </div>
+                        </div>
+                        <div class="last-github-update" id="last-github-update">
+                            Checking for latest update...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Overview Section -->
+        <section id="overview" class="section">
+            <div class="container">
+                <h2>Earthquake Data Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="total-earthquakes">Loading...</div>
+                        <div class="stat-label">Total Earthquakes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="date-range">Loading...</div>
+                        <div class="stat-label">Date Range</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="avg-magnitude">Loading...</div>
+                        <div class="stat-label">Average Magnitude</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="max-magnitude">Loading...</div>
+                        <div class="stat-label">Maximum Magnitude</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Map Section -->
+        <section id="map" class="section">
+            <div class="container">
+                <h2>Global Earthquake Map</h2>
+                <div class="map-controls">
+                    <label for="magnitude-filter">Minimum Magnitude:</label>
+                    <input type="range" id="magnitude-filter" min="0" max="9" value="4" step="0.1">
+                    <span id="magnitude-value">4.0</span>
+                </div>
+                <div id="earthquake-map" class="map-container"></div>
+                <div class="map-legend">
+                    <h4>Magnitude Scale</h4>
+                    <div class="legend-item"><span class="legend-color small"></span> < 4.0</div>
+                    <div class="legend-item"><span class="legend-color medium"></span> 4.0 - 5.9</div>
+                    <div class="legend-item"><span class="legend-color large"></span> 6.0 - 6.9</div>
+                    <div class="legend-item"><span class="legend-color major"></span> 7.0+</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section id="analytics" class="section">
+            <div class="container">
+                <h2>Data Analytics</h2>
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Magnitude Distribution</h3>
+                        <canvas id="magnitude-chart"></canvas>
+                    </div>
+                    <div class="chart-container timeline-container">
+                        <h3>Earthquakes Over Time</h3>
+                        <div class="timeline-controls">
+                            <label for="time-period">Time Period:</label>
+                            <select id="time-period">
+                                <option value="yearly">Yearly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="daily">Daily</option>
+                            </select>
+                        </div>
+                        <canvas id="timeline-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Depth vs Magnitude</h3>
+                        <canvas id="depth-magnitude-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Monthly Distribution</h3>
+                        <canvas id="monthly-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Data Section -->
+        <section id="data" class="section">
+            <div class="container">
+                <h2>Recent Earthquake Data</h2>
+                <div class="table-controls">
+                    <label for="table-magnitude-filter">Show earthquakes with magnitude ≥</label>
+                    <select id="table-magnitude-filter">
+                        <option value="0">All Magnitudes</option>
+                        <option value="2">2.0+</option>
+                        <option value="3">3.0+</option>
+                        <option value="4">4.0+</option>
+                        <option value="5">5.0+</option>
+                        <option value="6">6.0+</option>
+                    </select>
+                    <span class="table-count" id="table-earthquake-count">Showing recent earthquakes</span>
+                </div>
+                <div class="data-table-container">
+                    <table id="earthquakes-table" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Location</th>
+                                <th>Magnitude</th>
+                                <th>Depth (km)</th>
+                                <th>Coordinates</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Historical Earthquakes Data Explorer. Data visualization for educational purposes.</p>
+            <p class="data-source">Data Source: <a href="https://earthquake.usgs.gov/" target="_blank">United States Geological Survey (USGS)</a></p>
+            <p class="github-info">🚀 Deployed on GitHub Pages with automated data updates</p>
+        </div>
+    </footer>
+
+    <script src="github-script.js"></script>
+</body>
+</html>
