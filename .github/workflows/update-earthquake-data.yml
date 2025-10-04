@@ -5,8 +5,9 @@ on:
     # Run every 6 hours to keep data fresh
     - cron: '0 */6 * * *'
   workflow_dispatch: # Allow manual trigger
-  push:
-    branches: [ main ]
+
+permissions:
+  contents: write
 
 jobs:
   update-data:
@@ -17,6 +18,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0
         
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -40,7 +42,7 @@ jobs:
         git add -A
         if ! git diff --cached --quiet; then
           git commit -m "🌍 Auto-update earthquake data - $(date '+%Y-%m-%d %H:%M:%S UTC')"
-          git push
+          git push origin main
         else
           echo "No changes to commit"
         fi
