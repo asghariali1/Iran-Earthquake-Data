@@ -200,7 +200,7 @@ function updateMapMarkers() {
         marker.bindPopup(`
             <div class="popup-content">
                 <h4>Magnitude ${magnitude}</h4>
-                <p><strong>Location:</strong> ${earthquake.location || 'Unknown'}</p>
+                <p><strong>Location:</strong> ${earthquake.place || 'Unknown'}</p>
                 <p><strong>Date:</strong> ${new Date(earthquake.datetime).toLocaleDateString()}</p>
                 <p><strong>Depth:</strong> ${earthquake.depth || 'Unknown'} km</p>
                 <p><strong>Coordinates:</strong> ${lat.toFixed(3)}, ${lon.toFixed(3)}</p>
@@ -476,7 +476,7 @@ function updateDataTable() {
         
         row.innerHTML = `
             <td>${dateStr}</td>
-            <td>${earthquake.location || 'Unknown'}</td>
+            <td>${earthquake.place || 'Unknown'}</td>
             <td class="magnitude-cell">${earthquake.magnitude || 'N/A'}</td>
             <td>${earthquake.depth || 'N/A'}</td>
             <td>${parseFloat(earthquake.latitude).toFixed(3)}, ${parseFloat(earthquake.longitude).toFixed(3)}</td>
