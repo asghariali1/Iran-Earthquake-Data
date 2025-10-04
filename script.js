@@ -47,9 +47,32 @@ function loadEarthquakeData() {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            return response.json();
+            return response.text(); // Get as text first
         })
-        .then(data => {
+        .then(text => {
+            // Parse JSONL format (one JSON object per line)
+            const lines = text.trim().split('\n');
+            const data = [];
+            
+            for (const line of lines) {
+                if (line.trim()) {
+                    try {
+                        const earthquake = JSON.parse(line);
+                        // Convert timestamp to readable datetime if needed
+                        if (earthquake.time && !earthquake.datetime) {
+                            earthquake.datetime = new Date(earthquake.time).toISOString();
+                        }
+                        // Ensure magnitude is properly named
+                        if (earthquake.mag && !earthquake.magnitude) {
+                            earthquake.magnitude = earthquake.mag;
+                        }
+                        data.push(earthquake);
+                    } catch (parseError) {
+                        console.warn('Error parsing line:', line, parseError);
+                    }
+                }
+            }
+            
             console.log('Loaded earthquake data:', data.length, 'earthquakes');
             earthquakeData = data;
             updateOverviewStats();
