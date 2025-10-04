@@ -32,9 +32,6 @@ jobs:
       run: |
         python update_earthquake_data_github.py
         
-    - name: Generate frequency counts
-      run: |
-        python Frequency_counter.py
         
     - name: Commit and push changes
       run: |
